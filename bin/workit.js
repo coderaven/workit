@@ -3,22 +3,37 @@
 //console.log(process.cwd()); // List directory currently in
 var path = require('path');
 var program = require('commander');
-var db = require('dirty')('workit.db');
+var fs = require('fs');
 
-var projects = {};
+var workit = {
+	count: 0,
+	projects: []
+};
 
-db.on('load', function() {
-  	if (db.get('projects') === undefined){
-  		console.log("error!");
-  		projects.count = 0;
-		db.set('projects',projects);
-	} else {
-		projects = db.get('projects');
-		projects.count++;
-		db.set('projects',projects);
-		console.log(db.get('projects').count);
-	}  
-});
+function saveData(){
+	fs.writeFile("workit.db", JSON.stringify(workit), function (err){
+		if (err) throw err;
+	});
+}
+
+function initialize(){
+	fs.readFile("workit.db", function(err,data){
+		if (err){
+			fs.writeFile("workit.db", JSON.stringify(workit), function (err){
+				if (err) throw err;
+			});
+		} else {
+			workit = JSON.parse(data);
+			console.log(workit.count);
+			workit.count++;
+
+			saveData();
+		}
+	});
+}
+
+
+initialize();
 
 
 program

@@ -30,7 +30,6 @@
   },
   "homepage": "https://github.com/coderaven/workit",
   "dependencies": {
-    "commander": "^2.1.0",
-    "dirty": "^0.9.9"
+    "commander": "^2.1.0"
   }
 }
