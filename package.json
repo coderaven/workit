@@ -2,7 +2,7 @@
   "name": "workit",
   "version": "0.0.0",
   "description": "A Command Line Project Redirection and Management Tool",
-  "main": "bin/workit.js",
+  "main": "workit.js",
   "bin": {
     "workit": "workit.js"
   },
