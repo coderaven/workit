@@ -1,1 +1,1 @@
-{"count":5,"projects":[{"name":"eeweb","location":"/Users/raven/www/nodeapps/workit/eeweb"},{"name":"webnified","location":"/Users/raven/www/nodeapps/workit/webnified"},{"name":"schemeit","location":"/Users/raven/www/nodeapps/workit/schemeit"},{"name":"testapp","location":"/Users/raven/www/nodeapps/workit/testapp"},{"name":"simit","location":"/Users/raven/www/nodeapps/workit/simit"}]}
+{"count":3,"projects":{"schemeit":{"name":"schemeit","location":"/Users/raven/www/nodeapps/workit/schemeit"},"apptest":{"name":"apptest","location":"/Users/raven/www/nodeapps/workit/apptest"}}}

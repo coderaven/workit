@@ -10,7 +10,7 @@ var colors = require("colors");
 // Basic File Data Structure
 var workit = {};
 workit.count = 0;
-workit.projects = [];
+workit.projects = {};
 
 var saveData = function(callback){
 	fs.writeFile("projects.db", JSON.stringify(workit), function (err){
@@ -42,28 +42,36 @@ loadData(function(){
     .command('add [project-name]')
     .description('register / add a project folder to WorkIT')
     .action(function(projectName){
-        var loc = process.cwd() + "/" + projectName;
+        if (workit.projects[projectName] !== undefined){
+          console.log("\nYou have already added the project ".red + projectName.cyan + "\n");
+        } else {
+          console.log("\n");
+          var loc = process.cwd() + "/" + projectName;
           console.log('Project Name: '.cyan + projectName);
           console.log('Location: '.cyan + loc);
           console.log("Project Successfully Added!".green);
           workit.count++;
-          workit.projects.push({name: projectName, location: loc});
+          workit.projects[projectName] = {name: projectName, location: loc};
           saveData();
+          console.log("\n");
+        }
   });
 
   program
     .command('list')
     .description('lists all projects registered in WorkIT')
-    .action(function(projectName){
+    .action(function(){
         if (workit.count < 1){
           console.log("\nYou haven't added any projects to workit yet.\n".red);
         } else {
           console.log("\nProjects count: " + workit.count);
           console.log("Project Name -> Directory");
-          for (var i = 0; i < workit.count; i++){
-            // console.log(util.format("[%d] %s -> %s",i+1,workit.projects[i].name,workit.projects[i].location));
-            console.log( util.format("[%d]",i+1).rainbow + util.format(" %s",workit.projects[i].name).yellow + " -> " + util.format(" %s",workit.projects[i].location).cyan  );
+          
+          var count = 1;
+          for(var index in workit.projects) { 
+            console.log( util.format("[%d]",count++).rainbow + util.format(" %s",workit.projects[index].name).yellow + " -> " + util.format(" %s",workit.projects[index].location).cyan  );
           }
+         
           console.log("\n");
         }
   });
@@ -72,16 +80,12 @@ loadData(function(){
   .command('remove [project-name]')
   .description('remove project from WorkIT')
   .action(function(projectName){
-      if (workit.count < 1){
-        console.log("\nYou haven't added any projects to workit yet.\n");
+      if (workit.projects[projectName] !== undefined){
+        console.log("Project ".red + projectName.cyan + " has been deleted".red);
+        delete workit.projects[projectName];
+        saveData();
       } else {
-        index = workit.projects.indexOf(projectName);
-        if (~index){
-          workit.projects.splice(index,1);
-          console.log("\nProject deleted.\n".green);
-        } else {
-          console.log("\nProject does not exists!\n".red);
-        }
+        console.log("\nThe Project does not exist or has not yet been registered!".red)
       }
   });
 
