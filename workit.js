@@ -4,6 +4,8 @@
 var path = require('path');
 var program = require('commander');
 var fs = require('fs');
+var util = require('util');
+var colors = require("colors");
 
 // Basic File Data Structure
 var workit = {};
@@ -37,13 +39,13 @@ loadData(function(){
   .version('0.0.0')
 
   program
-    .command('add [ProjectName]')
+    .command('add [project-name]')
     .description('register / add a project folder to WorkIT')
     .action(function(projectName){
         var loc = process.cwd() + "/" + projectName;
-          console.log('Project Name: ' + projectName);
-          console.log('Location: ' + loc);
-          console.log("Project Successfully Added!");
+          console.log('Project Name: '.cyan + projectName);
+          console.log('Location: '.cyan + loc);
+          console.log("Project Successfully Added!".green);
           workit.count++;
           workit.projects.push({name: projectName, location: loc});
           saveData();
@@ -53,7 +55,34 @@ loadData(function(){
     .command('list')
     .description('lists all projects registered in WorkIT')
     .action(function(projectName){
-        console.log(workit.count++);
+        if (workit.count < 1){
+          console.log("\nYou haven't added any projects to workit yet.\n".red);
+        } else {
+          console.log("\nProjects count: " + workit.count);
+          console.log("Project Name -> Directory");
+          for (var i = 0; i < workit.count; i++){
+            // console.log(util.format("[%d] %s -> %s",i+1,workit.projects[i].name,workit.projects[i].location));
+            console.log( util.format("[%d]",i+1).rainbow + util.format(" %s",workit.projects[i].name).yellow + " -> " + util.format(" %s",workit.projects[i].location).cyan  );
+          }
+          console.log("\n");
+        }
+  });
+
+  program
+  .command('remove [project-name]')
+  .description('remove project from WorkIT')
+  .action(function(projectName){
+      if (workit.count < 1){
+        console.log("\nYou haven't added any projects to workit yet.\n");
+      } else {
+        index = workit.projects.indexOf(projectName);
+        if (~index){
+          workit.projects.splice(index,1);
+          console.log("\nProject deleted.\n".green);
+        } else {
+          console.log("\nProject does not exists!\n".red);
+        }
+      }
   });
 
   program.parse(process.argv);
